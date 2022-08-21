@@ -16,6 +16,8 @@ function getUrlId() {
 };
 
 
+getUrlId();
+
 // ----- add product by id in DOM ----- //
 
 function addProduct(product) {
@@ -25,6 +27,7 @@ function addProduct(product) {
     const itemDescription = document.getElementById('description');
     const colorChoice = document.getElementById('colors');
     const createImg = document.createElement('img');
+    const productColors = product.colors;
 
     productImg.appendChild(createImg);
 
@@ -35,9 +38,11 @@ function addProduct(product) {
     productPrice.textContent = product.price;
     itemDescription.textContent = product.description;
 
-    colorChoice.innerHTML += `<option value="vert">vert</option>`;
-    colorChoice.innerHTML += `<option value="blanc">blanc</option>`;  
+    for (const colors of productColors) {
+        colorChoice.insertAdjacentHTML('afterbegin', `<option value=${colors}>${colors}</option>`);
+    }
 }
 
+// ----- add product in basket ----- //
 
-getUrlId();
+// const basket = [product.id, ];
