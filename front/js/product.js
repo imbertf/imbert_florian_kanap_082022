@@ -1,32 +1,43 @@
 // ----- get URL -----//
 
 // get product.id in URL
+
 function getUrlId() {
-    const str = "http://127.0.0.1:5500/front/html/product.html?id=034707184e8e4eefb46400b5a3774b5f";
-    const url = new URL(str);
-    const search_params = new URLSearchParams(url.search);
-    if (search_params.has('id')) {
-        const id = search_params.get('id');
-        console.log(id)
-    }
+    const urlParams = new URLSearchParams(document.location.search);
+    const getId = urlParams.get('id');
+    console.log(getId);
+
+    fetch("http://localhost:3000/api/products/" + getId)
+        .then((response) => response.json())
+        .then((product) => addProduct(product))
+        .catch((error) => {
+            console.log("Page product inaccessible");
+        });
 };
 
-getUrlId();
 
 // ----- add product by id in DOM ----- //
 
-function fetchProduct() {
-    fetch(`http://localhost:3000/api/products/${id}`)
-        .then(response => response.json())
-        .then((data) => data.id(product => addProduct(product)))
-        .catch((error) => {
-            console.log("Le produit est inaccessible");
-          });
-};
-
 function addProduct(product) {
-    const itemImg = document.querySelector('.items__img');
-    itemImg.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-  }
+    const productImg = document.querySelector('article div.item__img');
+    const productName = document.getElementById('title');
+    const productPrice = document.getElementById('price');
+    const itemDescription = document.getElementById('description');
+    const colorChoice = document.getElementById('colors');
+    const createImg = document.createElement('img');
 
-fetchProduct();
+    productImg.appendChild(createImg);
+
+    createImg.setAttribute('src', product.imageUrl);
+    createImg.setAttribute('alt', product.altTxt);
+
+    productName.textContent = product.name;
+    productPrice.textContent = product.price;
+    itemDescription.textContent = product.description;
+
+    colorChoice.innerHTML += `<option value="vert">vert</option>`;
+    colorChoice.innerHTML += `<option value="blanc">blanc</option>`;  
+}
+
+
+getUrlId();
