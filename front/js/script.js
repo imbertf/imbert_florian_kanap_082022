@@ -14,21 +14,11 @@ function initProduct() {
     });
 }
 
-// function addProduct(product) {
-//   const items = document.getElementById('items');
-//   items.innerHTML += `<a href="./product.html?id=${product._id}">
-// <article>
-// <img src="${product.imageUrl}" alt="${product.altTxt}">
-// <h3 class="productName">${product.name}</h3>
-// <p class="productDescription">${product.description}.</p>
-// </article>
-// </a>`;
-// }
-
 // ----- Add product list on index.html from API ----- //
 
+// Create product card in DOM 
 function addProduct(product) {
-  // create element in const
+  // Get and create tags for product card
   const items = document.getElementById('items');
   const a = document.createElement('a');
   const article = document.createElement('article');
@@ -50,11 +40,9 @@ function addProduct(product) {
   p.textContent = product.description;
 
   // add tags in DOM
-  article.append(img);
-  article.append(h3);
-  article.append(p);
-  a.append(article);
-  items.append(a);
+  article.append(img, h3, p);
+  a.appendChild(article);
+  items.appendChild(a);
 }
 
 initProduct();
