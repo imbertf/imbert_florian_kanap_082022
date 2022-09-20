@@ -69,12 +69,7 @@ function addProductInCart() {
     // listen event on "add to cart" button 
     document.getElementById('addToCart').addEventListener('click', () => {
         const cart = getCart();
-        const productName = document.getElementById('title').innerText;
-        const productPrice = document.getElementById('price').innerText;
         const selectedColor = document.getElementById('colors');
-        const imageProduct = document.querySelector(".item__img > img");
-        const imageSrc = imageProduct.src;
-        const imageAlt = imageProduct.alt;
         const urlParams = new URLSearchParams(document.location.search);
         const getId = urlParams.get('id');
 
