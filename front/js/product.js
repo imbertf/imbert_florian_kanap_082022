@@ -1,7 +1,5 @@
-// ----- get URL -----//
-
+// get URL
 // get product.id in URL
-
 function getUrlId() {
     const urlParams = new URLSearchParams(document.location.search);
     const getId = urlParams.get('id');
@@ -18,8 +16,7 @@ function getUrlId() {
 
 getUrlId();
 
-// ----- add product by id in DOM ----- //
-
+// Add product selected by URL Id in DOM
 function addProduct(product) {
     const productImg = document.querySelector('article div.item__img');
     const productName = document.getElementById('title');
@@ -44,13 +41,11 @@ function addProduct(product) {
         option.textContent = colors;
         colorChoice.append(option);
     }
-
+    // call the function to add this product in cart 
     addProductInCart();
 };
 
-
-// ----- add product in cart ----- //
-
+// Get cart from localStorage or create new cart if no cart has been found
 function getCart() {
     let cart = localStorage.getItem("cart");
     if (cart == null) {
@@ -60,7 +55,9 @@ function getCart() {
     }
 };
 
+// Add product in cart using "Ajouter au panier" button
 function addProductInCart() {
+    // prevent input negative value 
     const selectedQuantity = document.getElementById('quantity');
     selectedQuantity.addEventListener('change', (event) => {
         // console.log(event);
@@ -69,6 +66,7 @@ function addProductInCart() {
         }
     });
 
+    // listen event on "add to cart" button 
     document.getElementById('addToCart').addEventListener('click', () => {
         const cart = getCart();
         const productName = document.getElementById('title').innerText;
@@ -80,26 +78,25 @@ function addProductInCart() {
         const urlParams = new URLSearchParams(document.location.search);
         const getId = urlParams.get('id');
 
+        // find if product is present in cart 
         const productFound = cart.find((product) => product.id === getId && product.color === selectedColor.value);
-        console.log(productFound);
+        // console.log(productFound);
 
+        // update quantity if same product already in cart 
         if (productFound) {
             for (product of cart) {
-                console.log(product.quantity);
+                // console.log(product.quantity);
                 if (product.id === getId && product.color === selectedColor.value) {
                     console.log('trouvé');
-                    console.log(product)
+                    // console.log(product)
                     product.quantity = +product.quantity + +selectedQuantity.value;
-                    console.log(product);
+                    // console.log(product);
                     window.alert("La quantité de votre panier à été modifée");
                 }
             }
+            // add product in cart if no product has been found 
         } else {
             const productValues = {
-                'name': productName,
-                'image': imageSrc,
-                'alt': imageAlt,
-                'price': productPrice,
                 'id': getId,
                 'color': selectedColor.value,
                 'quantity': +selectedQuantity.value,
@@ -112,12 +109,3 @@ function addProductInCart() {
     }
     )
 };
-
-
-
-
-
-
-
-
-
