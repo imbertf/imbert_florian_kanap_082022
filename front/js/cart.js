@@ -1,28 +1,28 @@
 // get cart
-function getCarts() {
-    const cart = localStorage.getItem("cart");
-    // console.table(cart);
-    if (cart === null) {
-        document.querySelector("#cartAndFormContainer > h1").textContent = "Votre panier est vide";
-        // console.log('Votre cart est vide');
-    } else {
-        return JSON.parse(cart);
-    };
-};
+// function getCarts() {
+//     const cart = localStorage.getItem("cart");
+//     // console.table(cart);
+//     if (cart === null) {
+//         document.querySelector("#cartAndFormContainer > h1").textContent = "Votre panier est vide";
+//         // console.log('Votre cart est vide');
+//     } else {
+//         return JSON.parse(cart);
+//     };
+// };
 
 // display product in car on page 
-function fetchProductsInCart() {
-    // get existing cart in localStorage
-    const carts = getCarts();
+// function fetchProductsInCart() {
+//     // get existing cart in localStorage
+//     const carts = getCarts();
 
-    // start loop in cart 
-    for (const cart of carts) {
-        fetch("http://localhost:3000/api/products/" + cart.id)
-            .then((response) => response.json())
-            .then((product) => showProductInCart(product, cart))
-            .catch((error) => console.error("erreur sur le produit ", error));
-    };
-};
+//     // start loop in cart 
+//     for (const cart of carts) {
+//         fetch("http://localhost:3000/api/products/" + cart.id)
+//             .then((response) => response.json())
+//             .then((product) => showProductInCart(product, cart))
+//             .catch((error) => console.error("erreur sur le produit ", error));
+//     };
+// };
 
 function showProductInCart(product, cart) {
 
@@ -103,7 +103,7 @@ function showProductInCart(product, cart) {
     // console.log(pQuantity);
 
     // create input itemQuantity in cart__item__content__settings__quantity
-    const inputQuantity = document.createElement('input');
+    const inputQuantity = document.createElement("input");
     inputQuantity.classList.add('itemQuantity');
     inputQuantity.setAttribute('type', "number");
     inputQuantity.setAttribute('name', "itemQuantity");
@@ -209,5 +209,94 @@ function totalPrice() {
     getTotalPrice.innerText = productPrice;
 };
 
-fetchProductsInCart();
+// fetchProductsInCart();
+
+function checkEmptyInputs() {
+    const form = document.getElementsByClassName("cart__order__form");
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const address = document.getElementById("address");
+    const city = document.getElementById("city");
+    const email = document.getElementById("email");
+    const order = document.getElementById("order");
+
+    const firstNameError = document.getElementById("firstNameErrorMsg");
+    const lastNameError = document.getElementById("lastNameErrorMsg");
+    const addressError = document.getElementById("addressErrorMsg");
+    const cityError = document.getElementById("cityErrorMsg");
+    const emailError = document.getElementById("emailErrorMsg");
+
+    firstName.addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (/^[A-zÀ-ú \-]+$/.test(value)) {
+            firstName.style.border = "2px solid green";
+            firstNameError.innerHTML = "";
+        } else {
+            // isValid = false;
+            firstNameError.innerHTML = "Charactères invalides";
+            firstName.style.border = "2px solid red";
+        };
+    });
+
+    lastName.addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (/^[A-zÀ-ú \-]+$/.test(value)) {
+            lastName.style.border = "2px solid green";
+            lastNameError.innerHTML = "";
+        } else {
+            // isValid = false;
+            lastNameError.innerHTML = "Charactères invalides";
+            lastName.style.border = "2px solid red";
+        };
+    });
+
+    address.addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (/^[A-zÀ-ú0-9 ,.'\-]+$/.test(value)) {
+            address.style.border = "2px solid green";
+            addressError.innerHTML = "";
+        } else {
+            // isValid = false;
+            addressError.innerHTML = "Charactères invalides";
+            address.style.border = "2px solid red";
+        };
+    });
+
+    city.addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (/^[A-zÀ-ú \-]+$/.test(value)) {
+            city.style.border = "2px solid green";
+            cityError.innerHTML = "";
+        } else {
+            // isValid = false;
+            cityError.innerHTML = "Charactères invalides";
+            city.style.border = "2px solid red";
+        };
+    });
+
+    email.addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})+$/.test(value)) {
+            email.style.border = "2px solid green";
+            emailError.innerHTML = "";
+        } else {
+            // isValid = false;
+            emailError.innerHTML = "Exemple: adresse@mail.com";
+            email.style.border = "2px solid red";
+        };
+    });
+
+    order.addEventListener("click", (event) => {
+        if (firstName.value == "" || lastName.value == "" || address.value == "" || city.value == "" || email.value == "") {
+            alert("Renseignez le formulaire pour passer commande.");
+            firstName.style.border = "2px solid red";
+            lastName.style.border = "2px solid red";
+            address.style.border = "2px solid red";
+            city.style.border = "2px solid red";
+            email.style.border = "2px solid red";
+        }
+    });
+};
+
+checkEmptyInputs();
 
