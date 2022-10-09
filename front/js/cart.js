@@ -211,3 +211,22 @@ function totalPrice() {
 
 fetchProductsInCart();
 
+// --------------------------------------------------------------
+// ------------------ |                  | ----------------------
+// ------------------ |   form section   | ----------------------
+// ------------------ |                  | ----------------------
+// --------------------------------------------------------------
+
+function firstNameValidation() {
+    let firstName = document.getElementById("firstName");
+    firstName.addEventListener("change", (event) => {
+        if (firstName.value = ""){
+            let error = document.getElementById("firstNameErrorMsg");
+            error.innerText = "Le champ prénom est requis.";
+            error.style.color = "red";
+            // event.preventDefault();
+        }
+    })
+};
+
+firstNameValidation();
