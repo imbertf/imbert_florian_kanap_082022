@@ -73,10 +73,13 @@ function addProductInCart() {
         const selectedColor = document.getElementById('colors');
         const urlParams = new URLSearchParams(document.location.search);
         const getId = urlParams.get('id');
-        if (selectedQuantity.value === '0') {
-            alert("Selectionnez une quantité suppérieure à 0");
+
+        // prevent adding function if quantity or color are not selected 
+        if (selectedQuantity.value === '0' || selectedColor.value === "") {
+            alert("Veuillez sélectionner une quantité et une couleur.");
             return;
         };
+
         // find if product is present in cart 
         const productFound = cart.find((product) => product.id === getId && product.color === selectedColor.value);
         // console.log(productFound);

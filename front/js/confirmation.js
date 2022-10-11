@@ -1,4 +1,6 @@
-// Récupère l'ID du produit et l'injecte dans le DOM
+// get order id from URL
+// add order id in DOM
+// remove all item from cart
 function confirmation() {
     const orderId = document.querySelector("#orderId");
     const orderIdUrl = new URL(location.href).searchParams.get("orderid");
