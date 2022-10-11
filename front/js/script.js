@@ -26,7 +26,7 @@ function addProduct(product) {
   const h3 = document.createElement('h3');
   const p = document.createElement('p');
 
-  // add attribute in tags
+  // add attributes in tags
   a.textContent = '';
   a.href = `./product.html?id=${product._id}`;
 

@@ -1,29 +1,31 @@
-// get cart
-// function getCarts() {
-//     const cart = localStorage.getItem("cart");
-//     // console.table(cart);
-//     if (cart === null) {
-//         document.querySelector("#cartAndFormContainer > h1").textContent = "Votre panier est vide";
-//         // console.log('Votre cart est vide');
-//     } else {
-//         return JSON.parse(cart);
-//     };
-// };
+// get cart. If no cart is present in localStorage, display message to inform customer
+function getCarts() {
+    const cart = localStorage.getItem("cart");
+    // console.table(cart);
+    if (cart === null) {
+        document.querySelector("#cartAndFormContainer > h1").textContent = "Votre panier est vide";
+        // console.log('Votre cart est vide');
+    } else {
+        return JSON.parse(cart);
+    };
+};
 
 // display product in car on page 
-// function fetchProductsInCart() {
-//     // get existing cart in localStorage
-//     const carts = getCarts();
+function fetchProductsInCart() {
+    // get existing cart in localStorage
+    const carts = getCarts();
 
-//     // start loop in cart 
-//     for (const cart of carts) {
-//         fetch("http://localhost:3000/api/products/" + cart.id)
-//             .then((response) => response.json())
-//             .then((product) => showProductInCart(product, cart))
-//             .catch((error) => console.error("erreur sur le produit ", error));
-//     };
-// };
+    // start loop in cart 
+    for (const cart of carts) {
+        fetch("http://localhost:3000/api/products/" + cart.id)
+            .then((response) => response.json())
+            .then((product) => showProductInCart(product, cart))
+            .catch((error) => console.error("erreur sur le produit ", error));
+    };
+};
 
+// show product in cart to customer 
+// display article adding elements in DOM 
 function showProductInCart(product, cart) {
 
     // create article
@@ -80,7 +82,7 @@ function showProductInCart(product, cart) {
 
     // create pPrice in cart__item__content__description 
     const pPrice = document.createElement("p");
-    pPrice.innerText = product.price;
+    pPrice.innerText = product.price + " €";
     cartItemContentDescription.appendChild(pPrice);
     // console.log(pPrice);
 
@@ -209,7 +211,7 @@ function totalPrice() {
     getTotalPrice.innerText = productPrice;
 };
 
-// fetchProductsInCart();
+fetchProductsInCart();
 
 function checkEmptyInputs() {
     const form = document.getElementsByClassName("cart__order__form");
@@ -287,6 +289,9 @@ function checkEmptyInputs() {
     });
 
     order.addEventListener("click", (event) => {
+        event.preventDefault();
+        const cart = getCarts();
+        const productID = cart.map(product => product.id);
         if (firstName.value == "" || lastName.value == "" || address.value == "" || city.value == "" || email.value == "") {
             alert("Renseignez le formulaire pour passer commande.");
             firstName.style.border = "2px solid red";
@@ -294,28 +299,31 @@ function checkEmptyInputs() {
             address.style.border = "2px solid red";
             city.style.border = "2px solid red";
             email.style.border = "2px solid red";
-        }
+        } else {
+            const order = {
+                contact: {
+                    "firstName": firstName.value,
+                    "lastName": lastName.value,
+                    "address": address.value,
+                    "city": city.value,
+                    "email": email.value,
+                },
+                products: productID,
+            };
+
+            fetch("http://localhost:3000/api/products/order", {
+                method: "POST",
+                body: JSON.stringify(order),
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    location.href = `confirmation.html?orderid=${data.orderId}`;
+                })
+        };
     });
 };
 
 checkEmptyInputs();
 
-// --------------------------------------------------------------
-// ------------------ |                  | ----------------------
-// ------------------ |   form section   | ----------------------
-// ------------------ |                  | ----------------------
-// --------------------------------------------------------------
-
-function firstNameValidation() {
-    let firstName = document.getElementById("firstName");
-    firstName.addEventListener("change", (event) => {
-        if (firstName.value = ""){
-            let error = document.getElementById("firstNameErrorMsg");
-            error.innerText = "Le champ prénom est requis.";
-            error.style.color = "red";
-            // event.preventDefault();
-        }
-    })
-};
-
-firstNameValidation();

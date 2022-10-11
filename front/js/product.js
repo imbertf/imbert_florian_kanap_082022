@@ -1,10 +1,10 @@
-// get URL
 // get product.id in URL
 function getUrlId() {
     const urlParams = new URLSearchParams(document.location.search);
     const getId = urlParams.get('id');
     // console.log(getId);
 
+    // request API with specific ID of the selected product 
     fetch("http://localhost:3000/api/products/" + getId)
         .then((response) => response.json())
         .then((product) => addProduct(product))
@@ -35,6 +35,7 @@ function addProduct(product) {
     productPrice.textContent = product.price;
     itemDescription.textContent = product.description;
 
+    // start loop to display color option to customer 
     for (const colors of productColors) {
         const option = document.createElement('option');
         option.value = colors;
@@ -72,7 +73,10 @@ function addProductInCart() {
         const selectedColor = document.getElementById('colors');
         const urlParams = new URLSearchParams(document.location.search);
         const getId = urlParams.get('id');
-
+        if (selectedQuantity.value === '0') {
+            alert("Selectionnez une quantité suppérieure à 0");
+            return;
+        };
         // find if product is present in cart 
         const productFound = cart.find((product) => product.id === getId && product.color === selectedColor.value);
         // console.log(productFound);
