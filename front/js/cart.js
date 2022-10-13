@@ -2,8 +2,10 @@
 function getCarts() {
     const cart = localStorage.getItem("cart");
     // console.table(cart);
-    if (cart === null) {
+    if (cart == null) {
         document.querySelector("#cartAndFormContainer > h1").textContent = "Votre panier est vide";
+        const cartOrder = document.querySelector(".cart__order");
+        cartOrder.style.display = "none";
         // console.log('Votre cart est vide');
     } else {
         return JSON.parse(cart);
@@ -125,8 +127,8 @@ function showProductInCart(product, cart) {
     // prevent adding negative value
     inputQuantity.addEventListener('change', (event) => {
         // console.log(event);
-        if (event.target.value < 0) {
-            inputQuantity.value = 0;
+        if (event.target.value <= 0) {
+            deleteItem(dataId, dataColor);
         }
     });
 
@@ -171,6 +173,7 @@ function updateQuantity(event, quantityDataId, quantityDataColor) {
     localStorage.setItem("cart", JSON.stringify(cart));
     location.reload();
 }
+
 
 // allow customer to remove chosen item from cart 
 // Get article in cart
@@ -231,6 +234,20 @@ function totalPrice() {
 
 fetchProductsInCart();
 
+// clean localStorage if no product is present in cart
+// check if cart length is equal to 0, reload page and clear localStorage
+function clearEmptyCart() {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    console.log(cart);
+    if (cart.length == 0) {
+        location.reload();
+        localStorage.clear();
+    }
+}
+
+clearEmptyCart();
+
+
 // prevent error during writing form process 
 // use Regex to test if user is writing right informations in form line 
 // return error message to customer if the entered values are wrong
@@ -255,7 +272,6 @@ function checkEmptyInputs() {
             firstName.style.border = "2px solid green";
             firstNameError.innerHTML = "";
         } else {
-            // isValid = false;
             firstNameError.innerHTML = "Charactères invalides";
             firstName.style.border = "2px solid red";
         };
@@ -267,7 +283,6 @@ function checkEmptyInputs() {
             lastName.style.border = "2px solid green";
             lastNameError.innerHTML = "";
         } else {
-            // isValid = false;
             lastNameError.innerHTML = "Charactères invalides";
             lastName.style.border = "2px solid red";
         };
@@ -279,7 +294,6 @@ function checkEmptyInputs() {
             address.style.border = "2px solid green";
             addressError.innerHTML = "";
         } else {
-            // isValid = false;
             addressError.innerHTML = "Charactères invalides";
             address.style.border = "2px solid red";
         };
@@ -291,7 +305,6 @@ function checkEmptyInputs() {
             city.style.border = "2px solid green";
             cityError.innerHTML = "";
         } else {
-            // isValid = false;
             cityError.innerHTML = "Charactères invalides";
             city.style.border = "2px solid red";
         };
@@ -299,11 +312,10 @@ function checkEmptyInputs() {
 
     email.addEventListener("input", (event) => {
         const value = event.target.value;
-        if (/^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})+$/.test(value)) {
+        if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
             email.style.border = "2px solid green";
             emailError.innerHTML = "";
         } else {
-            // isValid = false;
             emailError.innerHTML = "Exemple: adresse@mail.com";
             email.style.border = "2px solid red";
         };
@@ -314,17 +326,24 @@ function checkEmptyInputs() {
         // prevent from natural refresh function of this event
         event.preventDefault();
         const cart = getCarts();
+
         // create map of products using id product
         const productID = cart.map(product => product.id);
+
         // checks if informations are entered
         // if not, display erro message to customer
+        // if one of regex test is false, send alert message to customer and prevent from order action with button
         if (firstName.value == "" || lastName.value == "" || address.value == "" || city.value == "" || email.value == "") {
+            event.preventDefault();
             alert("Renseignez le formulaire pour passer commande.");
             firstName.style.border = "2px solid red";
             lastName.style.border = "2px solid red";
             address.style.border = "2px solid red";
             city.style.border = "2px solid red";
             email.style.border = "2px solid red";
+        } else if (/^[A-zÀ-ú \-]+$/.test(firstName.value) == false || /^[A-zÀ-ú \-]+$/.test(lastName.value) == false || /^[A-zÀ-ú0-9 ,.'\-]+$/.test(address.value) == false || /^[A-zÀ-ú \-]+$/.test(city.value) == false || /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.value) == false) {
+            alert("Le formulaire est mal reneigné.");
+            event.preventDefault();
         } else {
             // if all informations are right, allow order using "Commander !" button
             // create Object with one contact object and products array inside of it

@@ -75,10 +75,13 @@ function addProductInCart() {
         const getId = urlParams.get('id');
 
         // prevent adding function if quantity or color are not selected 
-        if (selectedQuantity.value === '0' || selectedColor.value === "") {
-            alert("Veuillez sélectionner une quantité et une couleur.");
+        if (selectedColor.value === "") {
+            alert("Veuillez sélectionner une couleur.");
             return;
-        };
+        } else if (selectedQuantity.value > 100  || selectedQuantity.value === '0') {
+            alert("Veuillez sélectionner une quantité comprise entre 1 et 100.")
+            return;
+        }
 
         // find if product is present in cart 
         const productFound = cart.find((product) => product.id === getId && product.color === selectedColor.value);
